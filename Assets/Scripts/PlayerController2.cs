@@ -10,6 +10,7 @@ public class PlayerController2 : MonoBehaviour
     public GameObject crosshair;
     public GameObject arrowPrefab;
 
+
     bool isAiming; // Para rastrear se o botão do mouse esquerdo está pressionado
 
     private float crosshairAngle = 0.0f; // Ângulo da crosshair em relação ao jogador
@@ -106,5 +107,21 @@ public class PlayerController2 : MonoBehaviour
         arrow.transform.Rotate(0.0f, 0.0f, Mathf.Atan2(arrowDirection.y, arrowDirection.x) * Mathf.Rad2Deg);
         Destroy(arrow, 2.0f);
     }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+    if (collision.gameObject.CompareTag("GroundArrow")) // Verifique a tag ou outra forma de identificar as flechas fincadas no chão
+        {
+            Debug.Log("encostou");
+            // Calcule a direção de ricochete (direção simétrica em relação à normal da colisão)
+            Vector2 incomingDirection = GetComponent<Rigidbody2D>().velocity.normalized;
+            Vector2 normal = collision.contacts[0].normal;
+            Vector2 newDirection = Vector2.Reflect(incomingDirection, normal).normalized;
+
+            // Aplique a nova direção à flecha no ar
+            GetComponent<Rigidbody2D>().velocity = newDirection * 2.5f;
+        }
+    }
+
 }
 
