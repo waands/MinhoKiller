@@ -9,6 +9,7 @@ public class ArrowFincing : MonoBehaviour
     public Transform playerTransform; // Variável para a referência ao transform do jogador
     public int maxGroundArrows = 5; // Limite máximo de flechas fincadas no chão
 
+
     private GroundArrow currentArrow; // Referência para a flecha fincada atual
 
     //manter o controle das flechas no chão

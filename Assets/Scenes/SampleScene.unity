@@ -840,7 +840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b651cd38e459fa4597aa54bc7b370dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundArrowPrefab: {fileID: 7503072092415381905, guid: b573c860548e8e642b8fb51677e56acd, type: 3}
+  groundArrowPrefab: {fileID: 7338004426189468706, guid: 4a91e717afce5214d847b2c94268c190, type: 3}
   ground: {fileID: 1483012739}
   playerTransform: {fileID: 1951829510}
   maxGroundArrows: 5

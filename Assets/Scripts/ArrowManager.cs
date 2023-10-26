@@ -68,10 +68,5 @@ public class ArrowManager : MonoBehaviour
         Destroy(arrow, 2.0f);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Aqui você pode colocar o código a ser executado quando a colisão 2D ocorrer.
-        Debug.Log("Colisão 2D detectada com: " + collision.gameObject.name);
-    }
-
+    
 }
