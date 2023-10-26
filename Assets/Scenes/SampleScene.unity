@@ -726,12 +726,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1951829510}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &526808974 stripped
 Transform:
@@ -820,6 +820,7 @@ GameObject:
   m_Component:
   - component: {fileID: 579305918}
   - component: {fileID: 579305917}
+  - component: {fileID: 579305919}
   m_Layer: 0
   m_Name: arrowManager
   m_TagString: Untagged
@@ -852,13 +853,30 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579305916}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7624886, y: -0.18755326, z: 0.011583501}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &579305919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579305916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d01d2525097d34a40b3e8fec437bdd3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrowPrefab: {fileID: 2972248691671363365, guid: 4725ebadfe5343b4f929220e5d0e5ddd, type: 3}
+  playerTransform: {fileID: 1951829510}
+  topAnimator: {fileID: 1538522272}
+  crosshair: {fileID: 354184627}
+  crosshairRadius: 0.5
 --- !u!1001 &596627480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1780,7 +1798,7 @@ Transform:
   m_GameObject: {fileID: 1089236090}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: -0.405, z: 0}
+  m_LocalPosition: {x: 0.24, y: 0.875, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3033,9 +3051,6 @@ MonoBehaviour:
   playerId: 0
   bottomAnimator: {fileID: 1488114016}
   topAnimator: {fileID: 1538522272}
-  crosshair: {fileID: 354184627}
-  arrowPrefab: {fileID: 2972248691671363365, guid: 4725ebadfe5343b4f929220e5d0e5ddd, type: 3}
-  crosshairRadius: 0.5
 --- !u!4 &1951829510
 Transform:
   m_ObjectHideFlags: 0
@@ -3045,12 +3060,13 @@ Transform:
   m_GameObject: {fileID: 1951829507}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.31, y: 0.13, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 354184629}
   - {fileID: 1783296187}
+  - {fileID: 519420032}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1959309752 stripped
@@ -3387,7 +3403,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 519420032}
   - {fileID: 1951829510}
   - {fileID: 1089236092}
   - {fileID: 1257873314}

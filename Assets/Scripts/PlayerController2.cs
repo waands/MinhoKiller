@@ -7,14 +7,15 @@ public class PlayerController2 : MonoBehaviour
     public int playerId = 0;
     public Animator bottomAnimator;
     public Animator topAnimator;
-    public GameObject crosshair;
-    public GameObject arrowPrefab;
+    //public GameObject crosshair;
+    //public GameObject arrowPrefab;
+
 
 
     bool isAiming; // Para rastrear se o botão do mouse esquerdo está pressionado
 
-    private float crosshairAngle = 0.0f; // Ângulo da crosshair em relação ao jogador
-    public float crosshairRadius = 0.5f; // Raio da crosshair
+    //private float crosshairAngle = 0.0f; // Ângulo da crosshair em relação ao jogador
+    //public float crosshairRadius = 0.5f; // Raio da crosshair
 
     Vector3 movement;
     Vector3 mouseMovement;
@@ -38,13 +39,13 @@ public class PlayerController2 : MonoBehaviour
         ProcessInputs();
         Animate();
         Move();
-        AimAndShoot();        
+        //AimAndShoot();      
     }
 
     private void ProcessInputs() {
         movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
         // Obtenha a posição do mouse no mundo
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+     /*   mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         // Calcule o vetor da crosshair a partir do jogador para o mouse
         crosshairDirection = (mousePosition - transform.position).normalized;
 
@@ -56,7 +57,7 @@ public class PlayerController2 : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) {   
             isAiming = false;
             Shoot();            
-        }
+        }*/
     }
 
     private void Animate() {
@@ -71,10 +72,10 @@ public class PlayerController2 : MonoBehaviour
         topAnimator.SetFloat("MoveMagnitude", movement.magnitude);
 
         //atirando
-        topAnimator.SetFloat("AimHorizontal", crosshairDirection.x);
+/*        topAnimator.SetFloat("AimHorizontal", crosshairDirection.x);
         topAnimator.SetFloat("AimVertical", crosshairDirection.y);
         topAnimator.SetFloat("AimMagnitude", crosshairDirection.magnitude);
-        topAnimator.SetBool("Aim", isAiming);
+        topAnimator.SetBool("Aim", isAiming);*/
     }
 
     private void Move() {
@@ -82,7 +83,7 @@ public class PlayerController2 : MonoBehaviour
         if (movement.magnitude > 1)
         {   movement.Normalize();    }
     }    
-
+/*
     private void AimAndShoot()
     {
         // Calcule o ângulo em radianos
@@ -97,7 +98,7 @@ public class PlayerController2 : MonoBehaviour
 
         Vector3 crosshairPosition = new Vector3(crosshairX, crosshairY, 0.0f);
     }
-    
+    *//*
     private void Shoot()
     {
         Vector3 crosshairDirection = (crosshair.transform.position - transform.position).normalized;
@@ -107,7 +108,7 @@ public class PlayerController2 : MonoBehaviour
         arrow.transform.Rotate(0.0f, 0.0f, Mathf.Atan2(arrowDirection.y, arrowDirection.x) * Mathf.Rad2Deg);
         Destroy(arrow, 2.0f);
     }
-
+    *//*
     void OnCollisionEnter2D(Collision2D collision)
     {
     if (collision.gameObject.CompareTag("GroundArrow")) // Verifique a tag ou outra forma de identificar as flechas fincadas no chão
@@ -121,7 +122,7 @@ public class PlayerController2 : MonoBehaviour
             // Aplique a nova direção à flecha no ar
             GetComponent<Rigidbody2D>().velocity = newDirection * 2.5f;
         }
-    }
+    }*/
 
 }
 
