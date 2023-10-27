@@ -75,19 +75,21 @@ public class Snake : MonoBehaviour
         if (path != null && path.Count > 0) {
             Node nextNode = path[0];
 
-            Vector2 v = transform.position;
-
+             Vector2 v = transform.position;
             Vector3 nextNodePosition = grid.GetWorldPosition(nextNode.x, nextNode.y);
-            bool movingY = nextNodePosition.y != transform.position.y;
-
+            grid.GetXy(transform.position, out int currentX, out int currentY);
+            
+            // Determine if the snake is moving vertically based on grid y-values
+            bool movingY = nextNode.y != currentY;
+            
             Debug.Log(movingY);
             if (movingY)
-                nextNodePosition.y += grid.cellSize * 0.5f; 
+                nextNodePosition.x += grid.cellSize * 0.5f; 
             else 
-                nextNodePosition.x -= grid.cellSize * 0.5f; 
-
+                nextNodePosition.y += grid.cellSize * 0.5f; 
+            
             transform.position = nextNodePosition;
-
+            
             path.RemoveAt(0); // remove the node we just moved to
 
             // If snake reaches the fruit, get a new path.
