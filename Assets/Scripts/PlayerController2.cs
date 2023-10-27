@@ -8,13 +8,9 @@ public class PlayerController2 : MonoBehaviour
     public int playerId = 0;
     public Animator bottomAnimator;
     public Animator topAnimator;
-<<<<<<< HEAD
-    //public GridGraph gridGraph;
-=======
     public ContactFilter2D movementFilter;
     public float collisionOffset = 0.05f;
     public float moveSpeed = 1f;
->>>>>>> 1ceaa8d9d10ea41fad9dd55e30eb386b19a24a0e
     //public GameObject crosshair;
     //public GameObject arrowPrefab;
 
