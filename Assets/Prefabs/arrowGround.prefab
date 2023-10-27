@@ -76,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c02844e71d6b3ff4faab79a086ef225e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -126,6 +126,7 @@ MonoBehaviour:
   speed: 0
   isActive: 0
   arrowGround: {fileID: 5091582842299188252}
+  colliding: 0
 --- !u!50 &-3853690859323835668
 Rigidbody2D:
   serializedVersion: 4
