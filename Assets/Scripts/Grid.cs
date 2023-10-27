@@ -97,7 +97,7 @@ public class Grid
     // for each path debug
     if (path != null) {
         for (int i = 0; i < path.Count - 1; i++) {
-            Debug.DrawLine(GetWorldPosition(path[i].x, path[i].y) + new Vector3(cellSize, cellSize) * 0.5f, GetWorldPosition(path[i + 1].x, path[i + 1].y) + new Vector3(cellSize, cellSize) * 0.5f, Color.green, 100f);
+            Debug.DrawLine(GetWorldPosition(path[i].x, path[i].y) + new Vector3(cellSize, cellSize) * 0.5f, GetWorldPosition(path[i + 1].x, path[i + 1].y) + new Vector3(cellSize, cellSize) * 0.5f, Color.green, 10f);
         }
     }
 
