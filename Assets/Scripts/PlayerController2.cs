@@ -1,13 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController2 : MonoBehaviour
 {
     public int playerId = 0;
     public Animator bottomAnimator;
     public Animator topAnimator;
+<<<<<<< HEAD
     //public GridGraph gridGraph;
+=======
+    public ContactFilter2D movementFilter;
+    public float collisionOffset = 0.05f;
+    public float moveSpeed = 1f;
+>>>>>>> 1ceaa8d9d10ea41fad9dd55e30eb386b19a24a0e
     //public GameObject crosshair;
     //public GameObject arrowPrefab;
 
@@ -18,24 +25,22 @@ public class PlayerController2 : MonoBehaviour
     //private float crosshairAngle = 0.0f; // Ângulo da crosshair em relação ao jogador
     //public float crosshairRadius = 0.5f; // Raio da crosshair
 
-    Vector3 movement;
+    Vector2 movement;
     Vector3 mouseMovement;
     Vector3 mousePosition;
     Vector3 crosshairDirection;
 
-    void Awake() {
-        //player = ReInput.players.GetPlayer(playerId);
-        //Cursor.lockState = CursorLockMode.Locked;
-    }
+    Rigidbody2D rb;
+    List<RaycastHit2D> castCollisions = new List<RaycastHit2D>();
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         ProcessInputs();
         Animate();
@@ -45,21 +50,6 @@ public class PlayerController2 : MonoBehaviour
     }
 
     private void ProcessInputs() {
-        movement = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f);
-        // Obtenha a posição do mouse no mundo
-     /*   mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // Calcule o vetor da crosshair a partir do jogador para o mouse
-        crosshairDirection = (mousePosition - transform.position).normalized;
-
-        // Verifique se o botão do mouse esquerdo foi pressionado
-        if (Input.GetMouseButtonDown(0)){   
-            isAiming = true;    
-        }
-        // Verifique se o botão do mouse esquerdo foi solto
-        if (Input.GetMouseButtonUp(0)) {   
-            isAiming = false;
-            Shoot();            
-        }*/
     }
 
     private void Animate() {
@@ -72,59 +62,29 @@ public class PlayerController2 : MonoBehaviour
         topAnimator.SetFloat("MoveHorizontal", movement.x);
         topAnimator.SetFloat("MoveVertical", movement.y);
         topAnimator.SetFloat("MoveMagnitude", movement.magnitude);
-
-        //atirando
-/*        topAnimator.SetFloat("AimHorizontal", crosshairDirection.x);
-        topAnimator.SetFloat("AimVertical", crosshairDirection.y);
-        topAnimator.SetFloat("AimMagnitude", crosshairDirection.magnitude);
-        topAnimator.SetBool("Aim", isAiming);*/
     }
 
     private void Move() {
-        transform.position = transform.position + movement * Time.deltaTime;
-        if (movement.magnitude > 1)
-        {   movement.Normalize();    }
-    }    
-/*
-    private void AimAndShoot()
-    {
-        // Calcule o ângulo em radianos
-        crosshairAngle = Mathf.Atan2(crosshairDirection.y, crosshairDirection.x);
+        // transform.position = transform.position + movement * Time.deltaTime;
+        // if (movement.magnitude > 1)
+        // {   movement.Normalize();    }
 
-        // Calcule as coordenadas X e Y da crosshair com base no ângulo e no raio
-        float crosshairX = transform.position.x + crosshairRadius * Mathf.Cos(crosshairAngle);
-        float crosshairY = transform.position.y + crosshairRadius * Mathf.Sin(crosshairAngle);
-
-        // Defina a posição da crosshair
-        crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0.0f);
-
-        Vector3 crosshairPosition = new Vector3(crosshairX, crosshairY, 0.0f);
-    }
-    *//*
-    private void Shoot()
-    {
-        Vector3 crosshairDirection = (crosshair.transform.position - transform.position).normalized;
-        Vector2 arrowDirection = new Vector2(crosshairDirection.x, crosshairDirection.y).normalized;
-        GameObject arrow = Instantiate(arrowPrefab, transform.position, Quaternion.identity);
-        arrow.GetComponent<Rigidbody2D>().velocity = arrowDirection * 2.5f;
-        arrow.transform.Rotate(0.0f, 0.0f, Mathf.Atan2(arrowDirection.y, arrowDirection.x) * Mathf.Rad2Deg);
-        Destroy(arrow, 2.0f);
-    }
-    *//*
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-    if (collision.gameObject.CompareTag("GroundArrow")) // Verifique a tag ou outra forma de identificar as flechas fincadas no chão
-        {
-            Debug.Log("encostou");
-            // Calcule a direção de ricochete (direção simétrica em relação à normal da colisão)
-            Vector2 incomingDirection = GetComponent<Rigidbody2D>().velocity.normalized;
-            Vector2 normal = collision.contacts[0].normal;
-            Vector2 newDirection = Vector2.Reflect(incomingDirection, normal).normalized;
-
-            // Aplique a nova direção à flecha no ar
-            GetComponent<Rigidbody2D>().velocity = newDirection * 2.5f;
+        if(movement != Vector2.zero){
+            Debug.Log(movement);
+            int count = rb.Cast(
+                movement,
+                movementFilter,
+                castCollisions,
+                moveSpeed * Time.fixedDeltaTime + collisionOffset
+            );
+            if(count == 0){
+                rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);    
+            }
         }
-    }*/
+    }
 
+    void OnMove(InputValue movementValue){
+        movement = movementValue.Get<Vector2>();
+    }
 }
 
