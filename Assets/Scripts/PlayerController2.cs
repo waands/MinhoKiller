@@ -7,7 +7,7 @@ public class PlayerController2 : MonoBehaviour
     public int playerId = 0;
     public Animator bottomAnimator;
     public Animator topAnimator;
-    public GridGraph gridGraph;
+    // public GridGraph gridGraph;
     //public GameObject crosshair;
     //public GameObject arrowPrefab;
 

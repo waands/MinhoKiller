@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 public class Testing : MonoBehaviour
 {
     public Grid grid;
-    private float cellSize = 1f; // Defina o tamanho da célula conforme desejado.
+    private float cellSize = 0.1f; // Defina o tamanho da célula conforme desejado.
 
     private void Awake()
     {
