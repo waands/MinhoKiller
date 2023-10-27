@@ -7,7 +7,7 @@ public class PlayerController2 : MonoBehaviour
     public int playerId = 0;
     public Animator bottomAnimator;
     public Animator topAnimator;
-    public GridGraph gridGraph;
+    //public GridGraph gridGraph;
     //public GameObject crosshair;
     //public GameObject arrowPrefab;
 
@@ -40,7 +40,7 @@ public class PlayerController2 : MonoBehaviour
         ProcessInputs();
         Animate();
         Move();
-        Node currentNode = gridGraph.GetNodeFromWorldPosition(transform.position);
+        //Node currentNode = gridGraph.GetNodeFromWorldPosition(transform.position);
         //AimAndShoot();      
     }
 

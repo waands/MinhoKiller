@@ -18,12 +18,25 @@ public class Snake : MonoBehaviour
     // Tail Prefab
     public GameObject tailPrefab;
 
+    public Vector3 initialPosition = new Vector3(0, 0);
+    public Testing batata;
+    public Transform snakey;
+    public Transform fruta;
+    private Grid grid;
 
     // Use this for initialization
     void Start()
     {
+        
         // Add 4 initial tail segments
         AddInitialTailSegments(4);
+
+        this.grid = batata.grid;
+        Debug.Log(grid);
+        grid.GetPath(snakey.position, snakey.position);
+
+        Debug.Log(grid.GetPath(snakey.position, snakey.position));
+
 
         // Move the Snake every 300ms
         InvokeRepeating("Move", 0.3f, 0.3f);
