@@ -71,19 +71,20 @@ public class Pathfinding {
 
     private List<Node> GetNeighbors(Node node) {
         List<Node> neighbors = new List<Node>();
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0)
-                    continue;
-
-                int checkX = node.x + x;
-                int checkY = node.y + y;
-
-                if (checkX >= 0 && checkX < grid.width && checkY >= 0 && checkY < grid.height) {
-                    neighbors.Add(new Node(checkX, checkY));
-                }
+        
+        // Define possible movements: Up, Down, Left, Right
+        int[] dx = { 0, 0, 1, -1 };
+        int[] dy = { 1, -1, 0, 0 };
+        
+        for (int i = 0; i < 4; i++) {
+            int checkX = node.x + dx[i];
+            int checkY = node.y + dy[i];
+    
+            if (checkX >= 0 && checkX < grid.width && checkY >= 0 && checkY < grid.height) {
+                neighbors.Add(new Node(checkX, checkY));
             }
         }
+    
         return neighbors;
     }
 

@@ -9,7 +9,7 @@ public class Grid
 
     public int width;
     public int height;
-    private float cellSize;
+    public float cellSize;
     private Vector3 originPosition;
     private int[,] gridArray;
     private TextMesh[,] debugTextArray;
@@ -86,7 +86,7 @@ public class Grid
         
     }
 
-    public void GetPath(Vector3 startPos, Vector3 targetPos)
+    public List<Node> GetPath(Vector3 startPos, Vector3 targetPos)
 {
 
     if(pathfinding == null) {
@@ -100,5 +100,8 @@ public class Grid
             Debug.DrawLine(GetWorldPosition(path[i].x, path[i].y) + new Vector3(cellSize, cellSize) * 0.5f, GetWorldPosition(path[i + 1].x, path[i + 1].y) + new Vector3(cellSize, cellSize) * 0.5f, Color.green, 100f);
         }
     }
+
+    return path;
+
 }
 }
