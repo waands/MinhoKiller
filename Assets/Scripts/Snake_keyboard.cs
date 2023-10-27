@@ -82,11 +82,13 @@ public class Snake : MonoBehaviour
             // Determine if the snake is moving vertically based on grid y-values
             bool movingY = nextNode.y != currentY;
             
-            Debug.Log(movingY);
-            if (movingY)
-                nextNodePosition.x += grid.cellSize * 0.5f; 
-            else 
+            if (movingY) {
                 nextNodePosition.y += grid.cellSize * 0.5f; 
+                nextNodePosition.x += grid.cellSize * 0.5f;
+            } else {
+                nextNodePosition.x += grid.cellSize * 0.5f; 
+                nextNodePosition.y += grid.cellSize * 0.5f;
+            } 
             
             transform.position = nextNodePosition;
             
