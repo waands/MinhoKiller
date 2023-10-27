@@ -19,9 +19,10 @@ public class Snake : MonoBehaviour
     public GameObject tailPrefab;
 
     public Vector3 initialPosition = new Vector3(0, 0);
+    public SpawnFood spawnFood;
     public Testing batata;
     public Transform snakey;
-    public Transform fruta;
+
     private Grid grid;
     private List<Node> path;
 
@@ -35,7 +36,10 @@ public class Snake : MonoBehaviour
         this.grid = batata.grid;
         // grid.GetPath(snakey.position, snakey.position);
 
-        path = grid.GetPath(snakey.position, fruta.position);
+        // get one food position and remove it from list
+
+        Vector3 foodPosition = spawnFood.getFruta();
+        path = grid.GetPath(snakey.position, foodPosition);
 
 
         // Move the Snake every 300ms
@@ -81,7 +85,7 @@ public class Snake : MonoBehaviour
             
             // Determine if the snake is moving vertically based on grid y-values
             bool movingY = nextNode.y != currentY;
-            
+
             if (movingY) {
                 nextNodePosition.y += grid.cellSize * 0.5f; 
                 nextNodePosition.x += grid.cellSize * 0.5f;
@@ -89,14 +93,15 @@ public class Snake : MonoBehaviour
                 nextNodePosition.x += grid.cellSize * 0.5f; 
                 nextNodePosition.y += grid.cellSize * 0.5f;
             } 
-            
+
             transform.position = nextNodePosition;
-            
+
             path.RemoveAt(0); // remove the node we just moved to
 
             // If snake reaches the fruit, get a new path.
             if (path.Count == 0) {
-                path = grid.GetPath(transform.position, fruta.position);
+                Vector3 foodPosition = spawnFood.getFruta();
+                path = grid.GetPath(transform.position, foodPosition);
             }
 
             // Handle eating and tail movement.
