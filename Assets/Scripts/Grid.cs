@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 using CodeMonkey.Utils;
 
 public class Grid
@@ -77,25 +78,27 @@ public class Grid
 
     private Pathfinding pathfinding;
     // Start is called before the first frame update
+    public void Awake() {
+        pathfinding = new Pathfinding(this);
+    }
     public void Start()
     {
         
     }
 
-    public List<Vector3> GetPath(Vector3 start, Vector3 end)
-    {
+    public void GetPath(Vector3 startPos, Vector3 targetPos)
+{
+
+    if(pathfinding == null) {
         pathfinding = new Pathfinding(this);
-        //List<Node> path = pathfinding.FindPath(start, end);
-        List<Node> path = pathfinding.FindPath(start, end);
-        if (path != null)
-        {
-            List<Vector3> waypoints = new List<Vector3>();
-            foreach (Node node in path)
-            {
-                waypoints.Add(node.worldPosition);
-            }
-            return waypoints;
-        }
-        return null;
     }
+    List<Node> path = pathfinding.FindPath(startPos, targetPos);
+    Debug.Log("pathfinding rseult");
+    // for each path debug
+    if (path != null) {
+        for (int i = 0; i < path.Count - 1; i++) {
+            Debug.DrawLine(GetWorldPosition(path[i].x, path[i].y) + new Vector3(cellSize, cellSize) * 0.5f, GetWorldPosition(path[i + 1].x, path[i + 1].y) + new Vector3(cellSize, cellSize) * 0.5f, Color.green, 100f);
+        }
+    }
+}
 }

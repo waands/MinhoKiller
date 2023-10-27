@@ -32,10 +32,9 @@ public class Snake : MonoBehaviour
         AddInitialTailSegments(4);
 
         this.grid = batata.grid;
-        Debug.Log(grid);
-        grid.GetPath(snakey.position, snakey.position);
+        // grid.GetPath(snakey.position, snakey.position);
 
-        Debug.Log(grid.GetPath(snakey.position, snakey.position));
+        grid.GetPath(snakey.position, fruta.position);
 
 
         // Move the Snake every 300ms

@@ -25,7 +25,6 @@ public class Testing : MonoBehaviour
 
         // Criar o grid
         grid = new Grid(cellsInX, cellsInY, cellSize, originPosition);
-        Debug.Log(grid);
 
     }
 

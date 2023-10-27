@@ -3,30 +3,39 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-public class Node : IComparable<Node>
-{
-    public Node parentNode;
-    public Vector3 worldPosition;
-    public int gCost;
-    public int hCost;
-    public int fCost { get { return gCost + hCost; } }
+
+public class Node {
     public int x;
     public int y;
+    public bool isWalkable;
+    public int gCost;
+    public int hCost;
+    public Node parent;
 
-    public Node(Vector3 _worldPos, int _x, int _y)
-    {
-        worldPosition = _worldPos;
-        x = _x;
-        y = _y;
+    public Node(int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.isWalkable = true;
+        this.gCost = 0;
+        this.hCost = 0;
     }
 
-    public int CompareTo(Node nodeToCompare)
-    {
-        int compare = fCost.CompareTo(nodeToCompare.fCost);
-        if (compare == 0)
-        {
-            compare = hCost.CompareTo(nodeToCompare.hCost);
+    public int fCost {
+        get {
+            return gCost + hCost;
         }
-        return -compare;
+    }
+       public override bool Equals(object obj) {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+
+        Node other = (Node)obj;
+        return x == other.x && y == other.y;
+    }
+
+    public override int GetHashCode() {
+        // You can use a simple hash code combining method like this
+        // or any other method you prefer.
+        return x * 31 + y;
     }
 }
