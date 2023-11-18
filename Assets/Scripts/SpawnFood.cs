@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnFood : MonoBehaviour {
+public class SpawnFood : MonoBehaviour
+{
     // Food Prefab
     public GameObject foodPrefab;
 
@@ -12,7 +13,8 @@ public class SpawnFood : MonoBehaviour {
     private List<Vector3> foodPositions = new List<Vector3>();
 
     // Use this for initialization
-    void Awake () {
+    void Awake()
+    {
         mainCamera = Camera.main; // Assuming the camera with the "MainCamera" tag is the one you're using
         Spawn();
 
@@ -21,7 +23,8 @@ public class SpawnFood : MonoBehaviour {
     }
 
     // Spawn one piece of food
-    Vector3 Spawn() {
+    Vector3 Spawn()
+    {
         float halfHeight = mainCamera.orthographicSize;
         float halfWidth = halfHeight * mainCamera.aspect;
 
@@ -49,15 +52,21 @@ public class SpawnFood : MonoBehaviour {
         return v3;
     }
 
-    public Vector3 getFruta() {
+    public void ate()
+    {
+        foodPositions.RemoveAt(0);
+    }
+    public Vector3 getFruta()
+    {
         // check if has food
-        if (foodPositions.Count == 0) {
+        if (foodPositions.Count == 0)
+        {
             Vector3 v3 = Spawn();
-            foodPositions.RemoveAt(0);
+            // foodPositions.RemoveAt(0);
             return v3;
         }
         Vector3 v = foodPositions[0];
-        foodPositions.RemoveAt(0);
+        // foodPositions.RemoveAt(0);
         return v;
     }
 }

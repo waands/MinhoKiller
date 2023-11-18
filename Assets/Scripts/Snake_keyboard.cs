@@ -18,7 +18,10 @@ public class Snake : MonoBehaviour
     // Tail Prefab
     public GameObject tailPrefab;
 
-    public Vector3 initialPosition = new Vector3(0, 0);
+    public Transform player;
+
+
+    // public Vector3 initialPosition = new Vector3(0, 0);
     public SpawnFood spawnFood;
     public Testing batata;
     public Transform snakey;
@@ -29,17 +32,16 @@ public class Snake : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        
+
         // Add 4 initial tail segments
         AddInitialTailSegments(1);
 
         this.grid = batata.grid;
         // grid.GetPath(snakey.position, snakey.position);
 
-        // get one food position and remove it from list
 
-        Vector3 foodPosition = spawnFood.getFruta();
-        path = grid.GetPath(snakey.position, foodPosition);
+        // Vector3 foodPosition = spawnFood.getFruta();
+        // path = grid.GetPath(snakey.position, foodPosition);
 
 
         // Move the Snake every 300ms
@@ -73,39 +75,44 @@ public class Snake : MonoBehaviour
     }
 
 
-
-    void Move() {
-        // If there's a path and nodes left in it, follow the path.
-        if (path != null && path.Count > 0) {
+    void FollowPath()
+    {
+        if (path != null && path.Count > 0)
+        {
             Node nextNode = path[0];
 
-             Vector2 v = transform.position;
+            Vector2 v = transform.position;
             Vector3 nextNodePosition = grid.GetWorldPosition(nextNode.x, nextNode.y);
             grid.GetXy(transform.position, out int currentX, out int currentY);
-            
+
             // Determine if the snake is moving vertically based on grid y-values
             bool movingY = nextNode.y != currentY;
 
-            if (movingY) {
-                nextNodePosition.y += grid.cellSize * 0.5f; 
-                nextNodePosition.x += grid.cellSize * 0.5f;
-            } else {
-                nextNodePosition.x += grid.cellSize * 0.5f; 
+            if (movingY)
+            {
                 nextNodePosition.y += grid.cellSize * 0.5f;
-            } 
+                nextNodePosition.x += grid.cellSize * 0.5f;
+            }
+            else
+            {
+                nextNodePosition.x += grid.cellSize * 0.5f;
+                nextNodePosition.y += grid.cellSize * 0.5f;
+            }
 
             transform.position = nextNodePosition;
 
             path.RemoveAt(0); // remove the node we just moved to
 
             // If snake reaches the fruit, get a new path.
-            if (path.Count == 0) {
+            if (path.Count == 0)
+            {
                 Vector3 foodPosition = spawnFood.getFruta();
                 path = grid.GetPath(transform.position, foodPosition);
             }
 
             // Handle eating and tail movement.
-            if (ate) {
+            if (ate)
+            {
                 // Load Prefab into the world.
                 GameObject g = (GameObject)Instantiate(tailPrefab, v, Quaternion.identity);
 
@@ -116,7 +123,8 @@ public class Snake : MonoBehaviour
                 ate = false;
             }
             // Do we have a Tail?
-            else if (tail.Count > 0) {
+            else if (tail.Count > 0)
+            {
                 // Move last Tail Element to where the Head was.
                 tail.Last().position = v;
 
@@ -125,21 +133,72 @@ public class Snake : MonoBehaviour
                 tail.RemoveAt(tail.Count - 1);
             }
         }
-        else {
+        else
+        {
             // Original move code if there's no path to follow.
             Vector2 v = transform.position;
             transform.Translate(dir);
 
-            if (ate) {
+            if (ate)
+            {
                 GameObject g = (GameObject)Instantiate(tailPrefab, v, Quaternion.identity);
                 tail.Insert(0, g.transform);
                 ate = false;
             }
-            else if (tail.Count > 0) {
+            else if (tail.Count > 0)
+            {
                 tail.Last().position = v;
                 tail.Insert(0, tail.Last());
                 tail.RemoveAt(tail.Count - 1);
             }
+        }
+    }
+
+    void ChasePlayer()
+    {
+        // Calculate path to the player
+        path = grid.GetPath(transform.position, player.position);
+        FollowPath();
+    }
+    void MoveTowardsFood()
+    {
+        // Existing logic to move towards food
+        if (path != null && path.Count > 0)
+        {
+            FollowPath();
+        }
+        else
+        {
+            // Recalculate path to food if needed
+            Vector3 foodPosition = spawnFood.getFruta();
+            path = grid.GetPath(transform.position, foodPosition);
+        }
+    }
+    bool ShouldChasePlayer()
+    {
+        // Convert Vector3 to Vector2 (ignoring Z-axis)
+        Vector2 position2D = new Vector2(transform.position.x, transform.position.y);
+        Vector2 playerPosition2D = new Vector2(player.position.x, player.position.y);
+        Vector2 foodPosition2D = new Vector2(spawnFood.getFruta().x, spawnFood.getFruta().y);
+
+        // Calculate distances
+        float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
+        float distanceToFood = Vector2.Distance(position2D, foodPosition2D);
+
+        // Chase player if closer than food
+        return distanceToPlayer < distanceToFood;
+    }
+
+    void Move()
+    {
+        // Decide whether to chase the player or go for the food
+        if (ShouldChasePlayer())
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            MoveTowardsFood();
         }
     }
 
@@ -154,6 +213,7 @@ public class Snake : MonoBehaviour
 
             // Remove the Food
             Destroy(coll.gameObject);
+            spawnFood.ate();
         }
         // Collided with Tail or Border
         else
