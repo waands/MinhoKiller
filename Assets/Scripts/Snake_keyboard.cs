@@ -44,8 +44,8 @@ public class Snake : MonoBehaviour
         // path = grid.GetPath(snakey.position, foodPosition);
 
 
-        // Move the Snake every 300ms
-        InvokeRepeating("Move", 0.3f, 0.3f);
+        // Move the Snake every 150ms
+        InvokeRepeating("Move", grid.SNAKE_SPEED, grid.SNAKE_SPEED);
     }
 
 
@@ -222,6 +222,7 @@ public class Snake : MonoBehaviour
             MoveTowardsFood();
         }
         MoveSnakeBodyOnGrid(transform.position);
+        grid.LogGrid();
 
 
     }
@@ -238,6 +239,8 @@ public class Snake : MonoBehaviour
             // Remove the Food
             Destroy(coll.gameObject);
             spawnFood.ate();
+            // Reduce snake speed when eat
+            // if (grid.SNAKE_SPEED < 0.3f) grid.SNAKE_SPEED += 0.05f;
 
             // Update the grid for the new tail segment
             if (tail.Count > 0)

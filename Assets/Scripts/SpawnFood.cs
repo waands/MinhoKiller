@@ -7,15 +7,16 @@ public class SpawnFood : MonoBehaviour
     // Food Prefab
     public GameObject foodPrefab;
 
-    // Camera reference
-    private Camera mainCamera;
+    public Testing batata;
+    private Grid grid;
+
 
     private List<Vector3> foodPositions = new List<Vector3>();
 
     // Use this for initialization
     void Awake()
     {
-        mainCamera = Camera.main; // Assuming the camera with the "MainCamera" tag is the one you're using
+        this.grid = batata.grid;
         Spawn();
 
         // Spawn food every 4 seconds, starting in 3
@@ -25,32 +26,36 @@ public class SpawnFood : MonoBehaviour
     // Spawn one piece of food
     Vector3 Spawn()
     {
-        float halfHeight = mainCamera.orthographicSize;
-        float halfWidth = halfHeight * mainCamera.aspect;
+        int xCell, yCell;
+        Vector3 worldPosition;
 
-        float leftBorder = mainCamera.transform.position.x - halfWidth;
-        float rightBorder = mainCamera.transform.position.x + halfWidth;
-        float topBorder = mainCamera.transform.position.y + halfHeight;
-        float bottomBorder = mainCamera.transform.position.y - halfHeight;
+        while (true)
+        {
+            // Generate a random position within the grid
+            xCell = Random.Range(0, grid.width);
+            yCell = Random.Range(0, grid.height);
 
-        // x position between left & right border
-        float x = Random.Range(leftBorder, rightBorder);
+            // Check if the selected cell is empty
+            if (grid.GetValue(xCell, yCell) == 0)
+            {
+                // Use Grid's method to get the world position of the center of the cell
+                worldPosition = grid.GetWorldPosition(xCell, yCell) + new Vector3(grid.cellSize, grid.cellSize) * 0.5f;
 
-        // y position between top & bottom border
-        float y = Random.Range(bottomBorder, topBorder);
+                // Exit the loop if an empty cell is found
+                break;
+            }
+        }
 
+        // Add to food positions
+        foodPositions.Add(worldPosition);
 
-        Vector3 v3 = new Vector3(x, y);
-        // add to food positions
-        foodPositions.Add(v3);
+        // Instantiate the food at the world position
+        Instantiate(foodPrefab, worldPosition, Quaternion.identity);
 
-        // Instantiate the food at (x, y)
-        Instantiate(foodPrefab,
-                    new Vector2(x, y),
-                    Quaternion.identity); // default rotation
-
-        return v3;
+        return worldPosition;
     }
+
+
 
     public void ate()
     {

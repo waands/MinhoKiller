@@ -7,6 +7,7 @@ using CodeMonkey.Utils;
 public class Grid
 {
 
+    public float SNAKE_SPEED = 0.15f;
     public int width;
     public int height;
     public float cellSize;
@@ -24,16 +25,6 @@ public class Grid
         debugTextArray = new TextMesh[width, height];
 
 
-        for (int x = 0; x < gridArray.GetLength(0); x++)
-        {
-            for (int y = 0; y < gridArray.GetLength(1); y++)
-            {
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
-                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
-            }
-        }
-        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
-        Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
     }
 
     public Vector3 GetWorldPosition(int x, int y)
@@ -42,24 +33,31 @@ public class Grid
     }
 
 
-    public void LogPartialGrid(Vector2 center, int radius)
-{
-    string gridText = "";
-    int startX = Mathf.Max((int)center.x - radius, 0);
-    int startY = Mathf.Max((int)center.y - radius, 0);
-    int endX = Mathf.Min((int)center.x + radius, width - 1);
-    int endY = Mathf.Min((int)center.y + radius, height - 1);
-
-    for (int y = endY; y >= startY; y--)
+    public void LogGrid()
     {
-        for (int x = startX; x <= endX; x++)
+        for (int x = 0; x < gridArray.GetLength(0); x++)
         {
-            gridText += gridArray[x, y].ToString() + " ";
+            for (int y = 0; y < gridArray.GetLength(1); y++)
+            {
+                // Determine the color based on the grid array value
+                Color lineColor = gridArray[x, y] != 0 ? Color.red : Color.white;
+
+                // Draw lines with the determined color
+                if (x < gridArray.GetLength(0) - 1)
+                {
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), lineColor, SNAKE_SPEED);
+                }
+                if (y < gridArray.GetLength(1) - 1)
+                {
+                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), lineColor, SNAKE_SPEED);
+                }
+            }
         }
-        gridText += "\n";
+        // Draw the border lines
+        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, SNAKE_SPEED);
+        Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, SNAKE_SPEED);
     }
-    Debug.Log(gridText);
-}
+
     public void GetXy(Vector3 worldPosition, out int x, out int y)
     {
         x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
@@ -133,7 +131,7 @@ public class Grid
         {
             for (int i = 0; i < path.Count - 1; i++)
             {
-                Debug.DrawLine(GetWorldPosition(path[i].x, path[i].y) + new Vector3(cellSize, cellSize) * 0.5f, GetWorldPosition(path[i + 1].x, path[i + 1].y) + new Vector3(cellSize, cellSize) * 0.5f, Color.green, 10f);
+                Debug.DrawLine(GetWorldPosition(path[i].x, path[i].y) + new Vector3(cellSize, cellSize) * 0.5f, GetWorldPosition(path[i + 1].x, path[i + 1].y) + new Vector3(cellSize, cellSize) * 0.5f, Color.green, SNAKE_SPEED);
             }
         }
 
