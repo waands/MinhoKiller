@@ -17,6 +17,8 @@ public class Snake : MonoBehaviour
 
     // Tail Prefab
     public GameObject tailPrefab;
+    public GameObject tailEndPrefab; // Assign this in the Inspector
+
 
     public Transform player;
 
@@ -55,9 +57,19 @@ public class Snake : MonoBehaviour
         Vector2 position = transform.position; // Start at the current position of the snake
         for (int i = 0; i < initialSize; i++)
         {
-            position -= dir; // Subtract the direction to position the tail segment
-            GameObject tailSegment = (GameObject)Instantiate(tailPrefab, position, Quaternion.identity);
-            tail.Add(tailSegment.transform);
+            {
+                // Subtract the direction to position the tail segment
+                position -= dir;
+
+                // Determine if this is the last segment
+                GameObject prefabToInstantiate = (i == initialSize - 1) ? tailEndPrefab : tailPrefab;
+
+                // Instantiate the correct prefab
+                GameObject tailSegment = Instantiate(prefabToInstantiate, position, Quaternion.identity);
+
+                // Add the new segment to the tail list
+                tail.Add(tailSegment.transform);
+            }
         }
     }
 
@@ -93,11 +105,11 @@ public class Snake : MonoBehaviour
             path.RemoveAt(0); // remove the node we just moved to
 
             // If snake reaches the fruit, get a new path.
-            if (path.Count == 0)
-            {
-                Vector3 foodPosition = spawnFood.getFruta();
-                path = grid.GetPath(transform.position, foodPosition);
-            }
+            // if (path.Count == 0)
+            // {
+            //     Vector3 foodPosition = spawnFood.getFruta();
+            //     path = grid.GetPath(transform.position, foodPosition);
+            // }
 
             // Handle eating and tail movement.
             if (ate)
@@ -114,12 +126,36 @@ public class Snake : MonoBehaviour
             // Do we have a Tail?
             else if (tail.Count > 0)
             {
-                // Move last Tail Element to where the Head was.
-                tail.Last().position = v;
 
-                // Add to front of list, remove from the back.
-                tail.Insert(0, tail.Last());
-                tail.RemoveAt(tail.Count - 1);
+                // If more than one Tail Element
+                // get second last position
+
+
+
+                // move second last to where head was
+                if (tail.Count > 1)
+                {
+                    tail.Last().position = tail[tail.Count - 2].position;
+                    tail[tail.Count - 2].position = v;
+                    tail.Insert(0, tail[tail.Count - 2]);
+                    tail.RemoveAt(tail.Count - 2);
+
+                }
+                else
+                {
+
+
+
+                    // Move last Tail Element to where the Head was.
+                    tail.Last().position = v;
+
+                    // Add to front of list, remove from the back.
+                    tail.Insert(0, tail.Last());
+                    tail.RemoveAt(tail.Count - 1);
+                }
+
+
+
             }
         }
         else
