@@ -189,6 +189,26 @@ public class Snake : MonoBehaviour
         return distanceToPlayer < distanceToFood;
     }
 
+    void MoveSnakeBodyOnGrid(Vector2 newPosition)
+    {
+        // Convert the world position to grid coordinates
+        int gridX, gridY;
+        grid.GetXy(newPosition, out gridX, out gridY);
+
+        // Update grid for the previous position of the last tail segment
+        if (tail.Count > 0)
+        {
+            Vector2 lastTailPosition = tail.Last().position;
+            int lastGridX, lastGridY;
+            grid.GetXy(lastTailPosition, out lastGridX, out lastGridY);
+            grid.SetOccupied(lastGridX, lastGridY, false);
+        }
+
+        // Update the grid for the new head position
+        grid.SetOccupied(gridX, gridY, true);
+    }
+
+
     void Move()
     {
         // Decide whether to chase the player or go for the food
@@ -200,6 +220,9 @@ public class Snake : MonoBehaviour
         {
             MoveTowardsFood();
         }
+        MoveSnakeBodyOnGrid(transform.position);
+
+
     }
 
 
@@ -214,8 +237,15 @@ public class Snake : MonoBehaviour
             // Remove the Food
             Destroy(coll.gameObject);
             spawnFood.ate();
+
+            // Update the grid for the new tail segment
+            if (tail.Count > 0)
+            {
+                Vector2 newTailPosition = tail.Last().position;
+                grid.SetOccupied((int)newTailPosition.x, (int)newTailPosition.y, true);
+            }
+
         }
-        // Collided with Tail or Border
         else
         {
             // ToDo 'You lose' screen
