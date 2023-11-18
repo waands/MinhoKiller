@@ -52,7 +52,7 @@ public class ArrowManager : MonoBehaviour
 
         // Defina a posição da crosshair
         crosshair.transform.position = new Vector3(crosshairX, crosshairY, 0.0f);
-        
+
         topAnimator.SetFloat("AimHorizontal", crosshairDirection.x);
         topAnimator.SetFloat("AimVertical", crosshairDirection.y);
         topAnimator.SetFloat("AimMagnitude", crosshairDirection.magnitude);
@@ -62,11 +62,16 @@ public class ArrowManager : MonoBehaviour
     private void Shoot()
     {
         Vector2 arrowDirection = new Vector2(crosshairDirection.x, crosshairDirection.y).normalized;
-        GameObject arrow = Instantiate(arrowPrefab, playerTransform.position, Quaternion.identity);
+        Vector2 playerCenter = new Vector2(
+       playerTransform.position.x,
+       playerTransform.position.y + playerTransform.GetComponent<Collider2D>().bounds.extents.y
+   );
+
+        GameObject arrow = Instantiate(arrowPrefab, playerCenter, Quaternion.identity);
         arrow.GetComponent<Rigidbody2D>().velocity = arrowDirection * 2.5f;
         arrow.transform.Rotate(0.0f, 0.0f, Mathf.Atan2(arrowDirection.y, arrowDirection.x) * Mathf.Rad2Deg);
         Destroy(arrow, 2.0f);
     }
 
-    
+
 }

@@ -125,7 +125,6 @@ public class Grid
             pathfinding = new Pathfinding(this);
         }
         List<Node> path = pathfinding.FindPath(startPos, targetPos);
-        Debug.Log("pathfinding rseult");
         // for each path debug
         if (path != null)
         {

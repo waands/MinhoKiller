@@ -230,6 +230,7 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
+        Debug.Log("Snake collided with " + coll.name);
         // Food?
         if (coll.name.StartsWith("FoodPrefab"))
         {
@@ -250,9 +251,18 @@ public class Snake : MonoBehaviour
             }
 
         }
-        else
+        else if (coll.name.StartsWith("Player")) // Check if it's the player
         {
-            // ToDo 'You lose' screen
+            Debug.Log("Archer collided with snake");
+            // Bump the player
+            Rigidbody2D playerRigidbody = coll.GetComponent<Rigidbody2D>();
+            if (playerRigidbody != null)
+            {
+                Vector2 bumpDirection = (coll.transform.position - transform.position).normalized;
+                float bumpForce = 90f; // Adjust the force as needed
+                playerRigidbody.AddForce(bumpDirection * bumpForce);
+
+            }
         }
     }
 }

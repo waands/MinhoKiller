@@ -46,8 +46,6 @@ public class Pathfinding
                 return RetracePath(startNode, endNode);
             }
 
-            Debug.Log("neighbors");
-            Debug.Log(GetNeighbors(currentNode));
             foreach (Node neighbor in GetNeighbors(currentNode))
             {
                 if (grid.GetValue(neighbor.x, neighbor.y) != 0 || closedSet.Contains(neighbor))
@@ -58,8 +56,6 @@ public class Pathfinding
                 int newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbor);
                 if (newMovementCostToNeighbor < neighbor.gCost || !openList.Contains(neighbor))
                 {
-                    Debug.Log("newMovementCostToNeighbor");
-                    Debug.Log(newMovementCostToNeighbor);
                     neighbor.gCost = newMovementCostToNeighbor;
                     neighbor.hCost = GetDistance(neighbor, endNode);
                     neighbor.parent = currentNode;
