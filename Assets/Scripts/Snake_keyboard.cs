@@ -163,17 +163,18 @@ public class Snake : MonoBehaviour
     void MoveTowardsFood()
     {
         // Existing logic to move towards food
-        if (path != null && path.Count > 0)
-        {
-            FollowPath();
-        }
-        else
-        {
-            // Recalculate path to food if needed
-            Vector3 foodPosition = spawnFood.getFruta();
-            path = grid.GetPath(transform.position, foodPosition);
-        }
+        // if (path != null && path.Count > 0)
+        // {
+        //     FollowPath();
+        // }
+        // else
+        // {
+        // Recalculate path to food if needed
+        Vector3 foodPosition = spawnFood.getFruta();
+        path = grid.GetPath(transform.position, foodPosition);
+        FollowPath();
     }
+    // }
     bool ShouldChasePlayer()
     {
         // Convert Vector3 to Vector2 (ignoring Z-axis)
