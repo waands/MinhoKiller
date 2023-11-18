@@ -49,19 +49,6 @@ public class Snake : MonoBehaviour
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Move in a new Direction?
-        if (Input.GetKey(KeyCode.RightArrow))
-            dir = Vector2.right;
-        else if (Input.GetKey(KeyCode.DownArrow))
-            dir = -Vector2.up;    // '-up' means 'down'
-        else if (Input.GetKey(KeyCode.LeftArrow))
-            dir = -Vector2.right; // '-right' means 'left'
-        else if (Input.GetKey(KeyCode.UpArrow))
-            dir = Vector2.up;
-    }
 
     void AddInitialTailSegments(int initialSize)
     {
@@ -83,6 +70,8 @@ public class Snake : MonoBehaviour
 
             Vector2 v = transform.position;
             Vector3 nextNodePosition = grid.GetWorldPosition(nextNode.x, nextNode.y);
+            dir = (new Vector2(nextNodePosition.x, nextNodePosition.y) - v).normalized;
+
             grid.GetXy(transform.position, out int currentX, out int currentY);
 
             // Determine if the snake is moving vertically based on grid y-values
@@ -212,6 +201,7 @@ public class Snake : MonoBehaviour
 
     void Move()
     {
+        adjustRotation();
         // Decide whether to chase the player or go for the food
         if (ShouldChasePlayer())
         {
@@ -224,8 +214,34 @@ public class Snake : MonoBehaviour
         MoveSnakeBodyOnGrid(transform.position);
         grid.LogGrid();
 
-
     }
+    void adjustRotation()
+    {
+        // Calculate the direction to the next node
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        angle = Mathf.Round(angle / 90) * 90; // Round to the nearest multiple of 90
+        transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        // Update the rotation of each tail segment
+        for (int i = 0; i < tail.Count; i++)
+        {
+            Vector2 nextDir;
+            if (i == 0)
+            {
+                nextDir = (Vector2)(transform.position - tail[i].position).normalized;
+            }
+            else
+            {
+                nextDir = (Vector2)(tail[i - 1].position - tail[i].position).normalized;
+            }
+            float nextAngle = Mathf.Atan2(nextDir.y, nextDir.x) * Mathf.Rad2Deg;
+            // nextAngle = Mathf.Round(nextAngle / 90) * 90; // Round to the nearest multiple of 90
+            tail[i].rotation = Quaternion.Euler(0, 0, nextAngle);
+        }
+    }
+
+
+
 
 
     void OnTriggerEnter2D(Collider2D coll)
@@ -265,4 +281,5 @@ public class Snake : MonoBehaviour
             }
         }
     }
+
 }
