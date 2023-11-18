@@ -33,6 +33,12 @@ public class Grid
     }
 
 
+    public bool IsInGrid(Vector3 worldPosition)
+    {
+        GetXy(worldPosition, out int x, out int y);
+        // Check if the x and y coordinates are within the grid bounds
+        return x >= 0 && y >= 0 && x < width && y < height;
+    }
     public void LogGrid()
     {
         for (int x = 0; x < gridArray.GetLength(0); x++)

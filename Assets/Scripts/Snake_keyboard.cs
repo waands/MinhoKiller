@@ -175,8 +175,11 @@ public class Snake : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
         float distanceToFood = Vector2.Distance(position2D, foodPosition2D);
 
-        // Chase player if closer than food
-        return distanceToPlayer < distanceToFood;
+        // Check if the player is within the grid bounds
+        bool isPlayerInGrid = grid.IsInGrid(player.position);
+
+        // Chase player if within grid bounds and closer than food
+        return isPlayerInGrid && distanceToPlayer < distanceToFood;
     }
 
     void MoveSnakeBodyOnGrid(Vector2 newPosition)
