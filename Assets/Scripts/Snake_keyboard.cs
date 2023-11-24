@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ public class Snake : MonoBehaviour
     // (by default it moves to the right)
     Vector2 dir = Vector2.right;
 
+    //vidas
+    int vida = 3;
+    public Animator vidaAnimator;
+
     // Keep Track of Tail
     List<Transform> tail = new List<Transform>();
 
@@ -18,7 +23,7 @@ public class Snake : MonoBehaviour
     // Tail Prefab
     public GameObject tailPrefab;
     public GameObject tailEndPrefab; // Assign this in the Inspector
-
+    public GameObject gameOverMenu;
 
     public Transform player;
 
@@ -309,6 +314,16 @@ public class Snake : MonoBehaviour
         else if (coll.name.StartsWith("Player")) // Check if it's the player
         {
             Debug.Log("Archer collided with snake");
+            // Dá a tela de game over
+            // Carrega a cena atual novamente para resetar o jogo
+            if (vida > 1) {
+                vida--;
+                vidaAnimator.SetInteger("vidas", vida);
+            }else {
+                vida--;
+                vidaAnimator.SetInteger("vidas", vida);
+                gameOverMenu.SetActive(true);
+            }
             // Bump the player
             Rigidbody2D playerRigidbody = coll.GetComponent<Rigidbody2D>();
             if (playerRigidbody != null)
