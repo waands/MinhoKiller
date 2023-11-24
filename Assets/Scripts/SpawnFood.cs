@@ -59,7 +59,7 @@ public class SpawnFood : MonoBehaviour
 
     public void ate()
     {
-        foodPositions.RemoveAt(0);
+        if (foodPositions.Count > 0) foodPositions.RemoveAt(0);
     }
     public Vector3 getFruta()
     {

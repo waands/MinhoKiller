@@ -6,8 +6,12 @@ using System.Linq;
 
 public class Snake : MonoBehaviour
 {
-    // Current Movement Direction
-    // (by default it moves to the right)
+
+    public float speed; // Velocidade
+    public float aggression; // Agressividade
+    public int tailLengthToReproduce;
+
+
     Vector2 dir = Vector2.right;
      private int arrowHitCount = 0;
     private int hitsToShrink = 10; // Número de acertos necessários para encolher
@@ -17,10 +21,8 @@ public class Snake : MonoBehaviour
     int vida = 3;
     public Animator vidaAnimator;
 
-    // Keep Track of Tail
     List<Transform> tail = new List<Transform>();
 
-    // Did the snake eat something?
     bool ate = false;
 
     // Tail Prefab
@@ -59,7 +61,77 @@ public class Snake : MonoBehaviour
         InvokeRepeating("Move", grid.SNAKE_SPEED, grid.SNAKE_SPEED);
     }
 
+    public Snake Reproduce()
+    {
+        // Verifica se tem segmentos de cauda suficientes para a reprodução
+        if (tail.Count < 2)
+        {
+            Debug.Log("Não há cauda suficiente para a reprodução.");
+            return null;
+        }
 
+        // Determina o ponto de divisão da cauda
+        int midPoint = tail.Count / 2;
+
+        // Armazena a posição do último segmento de cauda que será removido
+        Vector3 lastSegmentPosition = tail[midPoint].position;
+
+        // Remove os segmentos de cauda da minhoca original, exceto o último
+        for (int i = midPoint; i < tail.Count - 1; i++)
+        {
+            // Update the grid to mark the position as unoccupied
+            Vector2 tailSegmentPosition = tail[i].position;
+            int tailSegmentGridX, tailSegmentGridY;
+            grid.GetXy(tailSegmentPosition, out tailSegmentGridX, out tailSegmentGridY);
+            grid.SetOccupied(tailSegmentGridX, tailSegmentGridY, false);
+
+            // Destroy the tail segment game object
+            Destroy(tail[i].gameObject);
+        }
+        tail.RemoveRange(midPoint, tail.Count - midPoint - 1);
+
+        // Cria a nova minhoca
+        GameObject offspringObject = Instantiate(this.gameObject);
+        Snake offspring = offspringObject.GetComponent<Snake>();
+
+        // Remove todos os segmentos de cauda da nova minhoca
+        foreach (Transform segment in offspring.tail)
+        {
+            // Update the grid for the new minhoca's tail segments as well
+            Vector2 segmentPosition = segment.position;
+            int segmentGridX, segmentGridY;
+            grid.GetXy(segmentPosition, out segmentGridX, out segmentGridY);
+            grid.SetOccupied(segmentGridX, segmentGridY, false);
+
+            // Destroy the segment game object
+            Destroy(segment.gameObject);
+        }
+        offspring.tail.Clear();
+
+        // Inicializa a nova minhoca com segmentos de cauda
+        offspring.AddInitialTailSegments(midPoint);
+
+        // Usa a posição do último segmento removido como a posição de spawn da nova minhoca
+        offspring.transform.position = lastSegmentPosition;
+
+        // Ajusta genes
+        offspring.speed = this.speed + RandomMutation();
+        offspring.aggression = this.aggression + RandomMutation();
+        offspring.tailLengthToReproduce = this.tailLengthToReproduce + Random.Range(0, 2);
+
+        return offspring;
+    }
+
+
+
+
+
+
+    private float RandomMutation()
+    {
+        // Retorna uma pequena variação aleatória
+        return Random.Range(-0.1f, 0.1f);
+    }
 
     void AddInitialTailSegments(int initialSize)
     {
@@ -83,6 +155,16 @@ public class Snake : MonoBehaviour
     }
 
 
+    void SetTail()
+    {
+
+        tail.Last().position = transform.position;
+
+        // Add to front of list, remove from the back.
+        tail.Insert(0, tail.Last());
+        tail.RemoveAt(tail.Count - 1);
+
+    }
     void FollowPath()
     {
         if (path != null && path.Count > 0)
@@ -261,6 +343,8 @@ public class Snake : MonoBehaviour
         }
         MoveSnakeBodyOnGrid(transform.position);
         grid.LogGrid();
+
+        if (tail.Count > this.tailLengthToReproduce) Reproduce();
 
     }
     void adjustRotation()

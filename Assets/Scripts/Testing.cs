@@ -11,22 +11,24 @@ public class Testing : MonoBehaviour
 
     private void Awake()
     {
-        
-        // Calcular o tamanho da câmera
-        float cameraHeight = Camera.main.orthographicSize * 2;
-        float cameraWidth = cameraHeight * Camera.main.aspect;
+        // Obter o Renderer do objeto
+        Renderer renderer = GetComponent<Renderer>();
+
+        // Usar o tamanho do bounds do objeto
+        float objectWidth = renderer.bounds.size.x;
+        float objectHeight = renderer.bounds.size.y;
 
         // Calcular o número de células
-        int cellsInX = Mathf.CeilToInt(cameraWidth / cellSize);
-        int cellsInY = Mathf.CeilToInt(cameraHeight / cellSize);
+        int cellsInX = Mathf.CeilToInt(objectWidth / cellSize);
+        int cellsInY = Mathf.CeilToInt(objectHeight / cellSize);
 
-        // Definir a posição de origem para centralizar o grid
-        Vector3 originPosition = new Vector3(-cameraWidth / 2, -cameraHeight / 2);
+        // Definir a posição de origem para centralizar o grid no objeto
+        Vector3 originPosition = transform.position - new Vector3(objectWidth / 2, objectHeight / 2, 0);
 
         // Criar o grid
         grid = new Grid(cellsInX, cellsInY, cellSize, originPosition);
-
     }
+
 
     private void Update()
     {
