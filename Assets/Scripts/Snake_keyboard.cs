@@ -30,6 +30,7 @@ public class Snake : MonoBehaviour
 
     // Tail Prefab
     public GameObject victoryMenu;
+    public VictoryMenuManager victoryMenuManager;
     public GameObject tailPrefab;
     public GameObject tailEndPrefab; // Assign this in the Inspector
     public GameObject gameOverMenu;
@@ -56,6 +57,7 @@ public class Snake : MonoBehaviour
         // grid.GetPath(snakey.position, snakey.position);
 
 
+        victoryMenuManager.alive(this.gameObject);
         // Vector3 foodPosition = spawnFood.getFruta();
         // path = grid.GetPath(snakey.position, foodPosition);
 
@@ -409,7 +411,7 @@ public class Snake : MonoBehaviour
              Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
              Destroy(gameObject); // Destrói o GameObject da cobra
              scoreManager.StopTimer(); // Para o temporizador
-             victoryMenu.SetActive(true);
+             victoryMenuManager.dead(this.gameObject);
             }
             }
         }
