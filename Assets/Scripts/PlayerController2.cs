@@ -52,13 +52,20 @@ public class PlayerController2 : MonoBehaviour
     {
         Vector3 newPosition = transform.position + movement * speed * Time.deltaTime;
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(newPosition, 0.1f);
+        // Obtenha o Collider do Player
+        Collider2D[] playerColliders = transform.GetChild(1).GetComponentsInChildren<Collider2D>(); // Ajuste o índice 0 se houver apenas um filho
 
-        foreach (Collider2D collider in colliders)
+        foreach (Collider2D playerCollider in playerColliders)
         {
-            if (collider.CompareTag("PAREDE"))
+            RaycastHit2D hit = Physics2D.Raycast(playerCollider.bounds.center, movement.normalized, movement.magnitude * speed * Time.deltaTime);
+            
+            if (hit.collider != null && hit.collider.CompareTag("PAREDE"))
             {
-                return;  // Do not update position if there's a collision with an obstacle
+                // Obter a direção oposta ao movimento atual
+                Vector3 oppositeDirection = -movement.normalized;
+
+                // Aplicar um pequeno deslocamento para fora da parede na direção oposta
+                newPosition += oppositeDirection * 0.1f;
             }
         }
 
