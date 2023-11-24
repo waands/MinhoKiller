@@ -6,6 +6,7 @@ public class SpawnFood : MonoBehaviour
 {
     // Food Prefab
     public GameObject foodPrefab;
+    public bool spawnIndependendtly = false;
 
     public Testing batata;
     private Grid grid;
@@ -20,7 +21,7 @@ public class SpawnFood : MonoBehaviour
         Spawn();
 
         //Spawn food every 5 seconds, starting in 3
-        InvokeRepeating("Spawn", 3, 4);
+        if (spawnIndependendtly) InvokeRepeating("Spawn", 3, 4);
     }
 
     // Spawn one piece of food
