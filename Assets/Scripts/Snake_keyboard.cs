@@ -55,6 +55,7 @@ public class Snake : MonoBehaviour
 
         this.grid = batata.grid;
         // grid.GetPath(snakey.position, snakey.position);
+        // scoreManager.StartTimer(); // Inicia o temporizador
 
 
         victoryMenuManager.alive(this.gameObject);
@@ -419,14 +420,9 @@ public class Snake : MonoBehaviour
                     grid.GetXy(bodySegment.transform.position, out tailSegmentGridX, out tailSegmentGridY);
                     grid.SetOccupied(tailSegmentGridX, tailSegmentGridY, false);
                     Destroy(gameObject); // Destrói o GameObject da cobra
+                    scoreManager.StopTimer(); // Para o temporizador
                     victoryMenuManager.dead(this.gameObject);
                 }
-            else {
-             Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
-             Destroy(gameObject); // Destrói o GameObject da cobra
-             scoreManager.StopTimer(); // Para o temporizador
-             victoryMenuManager.dead(this.gameObject);
-            }
             }
         }
         else if (coll.name.StartsWith("Player")) // Check if it's the player
