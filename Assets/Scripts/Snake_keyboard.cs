@@ -16,7 +16,7 @@ public class Snake : MonoBehaviour
     public bool shouldReproduce = true;
 
     Vector2 dir = Vector2.right;
-     private int arrowHitCount = 0;
+    private int arrowHitCount = 0;
     private int hitsToShrink = 10; // Número de acertos necessários para encolher
     public ScoreManager scoreManager; // Referência para o script do temporizador
 
@@ -283,13 +283,13 @@ public class Snake : MonoBehaviour
     bool ShouldChasePlayer()
     {
         // Convert Vector3 to Vector2 (ignoring Z-axis)
-         Vector2 position2D = new Vector2(transform.position.x, transform.position.y);
-         Vector2 playerPosition2D = new Vector2(player.position.x, player.position.y);
-         Vector2 foodPosition2D = new Vector2(closestFruta.x, closestFruta.y);
+        Vector2 position2D = new Vector2(transform.position.x, transform.position.y);
+        Vector2 playerPosition2D = new Vector2(player.position.x, player.position.y);
+        Vector2 foodPosition2D = new Vector2(closestFruta.x, closestFruta.y);
 
         // // Calculate distances
-         float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
-         float distanceToFood = Vector2.Distance(position2D, foodPosition2D);
+        float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
+        float distanceToFood = Vector2.Distance(position2D, foodPosition2D);
 
         // // Check if the player is within the grid bounds
         bool isPlayerInGrid = grid.IsInGrid(player.position);
@@ -392,7 +392,7 @@ public class Snake : MonoBehaviour
         else if (coll.name.StartsWith("flecha")) // Verifica se a cabeça colidiu com uma flecha
         {
             Destroy(coll.gameObject);
-             // Incrementa o contador de acertos
+            // Incrementa o contador de acertos
             arrowHitCount++;
 
             // Verifica se atingiu o número necessário de acertos
@@ -402,10 +402,24 @@ public class Snake : MonoBehaviour
                 Debug.Log("AAAAAAA");
                 if (tail.Count > 1)
                 {
-            // Remove o penúltimo segmento do corpo (mantendo a cauda)
-            GameObject bodySegment = tail[tail.Count - 2].gameObject;
-            tail.RemoveAt(tail.Count - 2);
-            Destroy(bodySegment);
+                    // Remove o penúltimo segmento do corpo (mantendo a cauda)
+                    GameObject bodySegment = tail[tail.Count - 2].gameObject;
+                    int tailSegmentGridX, tailSegmentGridY;
+                    grid.GetXy(bodySegment.transform.position, out tailSegmentGridX, out tailSegmentGridY);
+                    grid.SetOccupied(tailSegmentGridX, tailSegmentGridY, false);
+                    tail.RemoveAt(tail.Count - 2);
+                    Destroy(bodySegment);
+
+                }
+                else
+                {
+                    GameObject bodySegment = tail[0].gameObject;
+                    Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
+                    int tailSegmentGridX, tailSegmentGridY;
+                    grid.GetXy(bodySegment.transform.position, out tailSegmentGridX, out tailSegmentGridY);
+                    grid.SetOccupied(tailSegmentGridX, tailSegmentGridY, false);
+                    Destroy(gameObject); // Destrói o GameObject da cobra
+                    victoryMenuManager.dead(this.gameObject);
                 }
             else {
              Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
@@ -420,10 +434,13 @@ public class Snake : MonoBehaviour
             Debug.Log("Archer collided with snake");
             // Dá a tela de game over
             // Carrega a cena atual novamente para resetar o jogo
-            if (vida > 1) {
+            if (vida > 1)
+            {
                 vida--;
                 vidaAnimator.SetInteger("vidas", vida);
-            }else {
+            }
+            else
+            {
                 vida--;
                 vidaAnimator.SetInteger("vidas", vida);
                 gameOverMenu.SetActive(true);
