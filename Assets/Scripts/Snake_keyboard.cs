@@ -11,6 +11,7 @@ public class Snake : MonoBehaviour
     Vector2 dir = Vector2.right;
      private int arrowHitCount = 0;
     private int hitsToShrink = 10; // Número de acertos necessários para encolher
+    public ScoreManager scoreManager; // Referência para o script do temporizador
 
     //vidas
     int vida = 3;
@@ -333,6 +334,7 @@ public class Snake : MonoBehaviour
             else {
              Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
              Destroy(gameObject); // Destrói o GameObject da cobra
+             scoreManager.StopTimer(); // Para o temporizador
              victoryMenu.SetActive(true);
             }
             }
@@ -349,6 +351,7 @@ public class Snake : MonoBehaviour
                 vida--;
                 vidaAnimator.SetInteger("vidas", vida);
                 gameOverMenu.SetActive(true);
+                scoreManager.StopTimer(); // Para o temporizador
             }
             // Bump the player
             Rigidbody2D playerRigidbody = coll.GetComponent<Rigidbody2D>();

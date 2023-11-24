@@ -3,8 +3,9 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour
 {
-    public Text scoreText; // Referência para o componente de texto UI
-    private float scoreTime; // Contador de tempo
+    public Text scoreText;
+    private float scoreTime;
+    public bool timerActive = true;
 
     void Start()
     {
@@ -13,7 +14,21 @@ public class ScoreManager : MonoBehaviour
 
     void Update()
     {
-        scoreTime += Time.deltaTime; // Incrementa o tempo
-        scoreText.text = "Tempo: " + scoreTime.ToString("F2"); // Atualiza o texto
+        if (timerActive)
+        {
+            scoreTime += Time.deltaTime; 
+            scoreText.text = "Tempo: " + scoreTime.ToString("F2");
+        }
+    }
+
+    public void StopTimer()
+    {
+        timerActive = false;
+    }
+
+    // Adicione um método para reiniciar o temporizador se necessário
+    public void StartTimer()
+    {
+        timerActive = true;
     }
 }
