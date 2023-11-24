@@ -281,21 +281,21 @@ public class Snake : MonoBehaviour
     bool ShouldChasePlayer()
     {
         // Convert Vector3 to Vector2 (ignoring Z-axis)
-        Vector2 position2D = new Vector2(transform.position.x, transform.position.y);
-        Vector2 playerPosition2D = new Vector2(player.position.x, player.position.y);
-        Vector2 foodPosition2D = new Vector2(closestFruta.x, closestFruta.y);
+         Vector2 position2D = new Vector2(transform.position.x, transform.position.y);
+         Vector2 playerPosition2D = new Vector2(player.position.x, player.position.y);
+         Vector2 foodPosition2D = new Vector2(closestFruta.x, closestFruta.y);
 
-        // Calculate distances
-        float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
-        float distanceToFood = Vector2.Distance(position2D, foodPosition2D);
+        // // Calculate distances
+         float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
+         float distanceToFood = Vector2.Distance(position2D, foodPosition2D);
 
-        // Check if the player is within the grid bounds
+        // // Check if the player is within the grid bounds
         bool isPlayerInGrid = grid.IsInGrid(player.position);
+        if (!isPlayerInGrid) return false;
 
-        Debug.Log(isPlayerInGrid + ", " + distanceToFood + ", " + distanceToPlayer + ", " + aggression + ", " + (isPlayerInGrid && distanceToPlayer - aggression < distanceToFood));
-
-        // Chase player if within grid bounds and closer than food
-        return isPlayerInGrid && distanceToPlayer - aggression < distanceToFood;
+        return DecisionTreeClassifier.Classify(distanceToFood, distanceToPlayer, aggression);
+        // Debug.Log(isPlayerInGrid + ", " + distanceToFood + ", " + distanceToPlayer + ", " + aggression + ", " + (isPlayerInGrid && distanceToPlayer - aggression < distanceToFood));
+        // return isPlayerInGrid && distanceToPlayer - aggression < distanceToFood;
     }
 
     void MoveSnakeBodyOnGrid(Vector2 newPosition)
