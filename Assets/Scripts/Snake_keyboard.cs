@@ -9,6 +9,8 @@ public class Snake : MonoBehaviour
     // Current Movement Direction
     // (by default it moves to the right)
     Vector2 dir = Vector2.right;
+     private int arrowHitCount = 0;
+    private int hitsToShrink = 10; // Número de acertos necessários para encolher
 
     //vidas
     int vida = 3;
@@ -290,26 +292,49 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D coll)
     {
+        Debug.Log(coll.name.StartsWith("flecha"));
         Debug.Log("Snake collided with " + coll.name);
         // Food?
         if (coll.name.StartsWith("FoodPrefab"))
         {
             // Get longer in next Move call
             ate = true;
-
             // Remove the Food
             Destroy(coll.gameObject);
             spawnFood.ate();
             // Reduce snake speed when eat
             // if (grid.SNAKE_SPEED < 0.3f) grid.SNAKE_SPEED += 0.05f;
-
             // Update the grid for the new tail segment
             if (tail.Count > 0)
             {
                 Vector2 newTailPosition = tail.Last().position;
                 grid.SetOccupied((int)newTailPosition.x, (int)newTailPosition.y, true);
             }
+        }
+        else if (coll.name.StartsWith("flecha")) // Verifica se a cabeça colidiu com uma flecha
+        {
+            Destroy(coll.gameObject);
+             // Incrementa o contador de acertos
+            arrowHitCount++;
 
+            // Verifica se atingiu o número necessário de acertos
+            if (arrowHitCount >= hitsToShrink)
+            {
+                arrowHitCount = 0; // Reseta o contador
+                Debug.Log("AAAAAAA");
+                if (tail.Count > 1)
+                {
+            // Remove o penúltimo segmento do corpo (mantendo a cauda)
+            GameObject bodySegment = tail[tail.Count - 2].gameObject;
+            tail.RemoveAt(tail.Count - 2);
+            Destroy(bodySegment);
+                }
+            else {
+             Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
+             Destroy(gameObject); // Destrói o GameObject da cobra
+             gameOverMenu.SetActive(true);
+            }
+            }
         }
         else if (coll.name.StartsWith("Player")) // Check if it's the player
         {
