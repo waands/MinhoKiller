@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/fase_azul.unity
     guid: 8dc7114df7b3a3e43bd86d0f69e7d89e
   - enabled: 1
+    path: Assets/Scenes/FaseVerde.unity
+    guid: f94acda0d818cdabd8bbdc452ce92798
+  - enabled: 1
     path: Assets/Scenes/fase_roxo.unity
     guid: 85cb236ba3d530247b1b030e5f836c4b
   - enabled: 1

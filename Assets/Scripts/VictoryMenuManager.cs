@@ -14,6 +14,12 @@ public class VictoryMenuManager : MonoBehaviour
         SceneManager.LoadScene("SampleScene");
     }
 
+    public void continueGame()
+    {
+        gameObject.SetActive(false);
+        SceneManager.LoadScene("FaseVerde");
+    }
+
 
     public void alive(GameObject cobra)
     {
