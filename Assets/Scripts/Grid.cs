@@ -123,6 +123,8 @@ public class Grid
 
     }
 
+
+
     public List<Node> GetPath(Vector3 startPos, Vector3 targetPos)
     {
 

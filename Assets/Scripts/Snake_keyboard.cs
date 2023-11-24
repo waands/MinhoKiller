@@ -7,10 +7,13 @@ using System.Linq;
 public class Snake : MonoBehaviour
 {
 
-    public float speed; // Velocidade
+    public float speed;// Velocidade
     public float aggression; // Agressividade
     public int tailLengthToReproduce;
 
+    public int startingSize = 1;
+
+public bool shouldReproduce = true;
 
     Vector2 dir = Vector2.right;
      private int arrowHitCount = 0;
@@ -41,13 +44,13 @@ public class Snake : MonoBehaviour
 
     private Grid grid;
     private List<Node> path;
+    private Vector3 closestFruta;
 
     // Use this for initialization
     void Start()
     {
 
-        // Add 4 initial tail segments
-        AddInitialTailSegments(1);
+        AddInitialTailSegments(startingSize);
 
         this.grid = batata.grid;
         // grid.GetPath(snakey.position, snakey.position);
@@ -58,7 +61,7 @@ public class Snake : MonoBehaviour
 
 
         // Move the Snake every 150ms
-        InvokeRepeating("Move", grid.SNAKE_SPEED, grid.SNAKE_SPEED);
+        InvokeRepeating("Move", speed, speed);
     }
 
     public Snake Reproduce()
@@ -94,30 +97,15 @@ public class Snake : MonoBehaviour
         GameObject offspringObject = Instantiate(this.gameObject);
         Snake offspring = offspringObject.GetComponent<Snake>();
 
-        // Remove todos os segmentos de cauda da nova minhoca
-        foreach (Transform segment in offspring.tail)
-        {
-            // Update the grid for the new minhoca's tail segments as well
-            Vector2 segmentPosition = segment.position;
-            int segmentGridX, segmentGridY;
-            grid.GetXy(segmentPosition, out segmentGridX, out segmentGridY);
-            grid.SetOccupied(segmentGridX, segmentGridY, false);
-
-            // Destroy the segment game object
-            Destroy(segment.gameObject);
-        }
-        offspring.tail.Clear();
-
-        // Inicializa a nova minhoca com segmentos de cauda
-        offspring.AddInitialTailSegments(midPoint);
-
         // Usa a posição do último segmento removido como a posição de spawn da nova minhoca
         offspring.transform.position = lastSegmentPosition;
 
         // Ajusta genes
-        offspring.speed = this.speed + RandomMutation();
-        offspring.aggression = this.aggression + RandomMutation();
-        offspring.tailLengthToReproduce = this.tailLengthToReproduce + Random.Range(0, 2);
+        offspring.speed = this.speed + Random.Range(-0.05f, 0.05f);
+        if (offspring.speed < 0.05f) offspring.speed = 0.05f;
+        offspring.aggression = this.aggression + Random.Range(-1f, 2f);
+        offspring.tailLengthToReproduce = this.tailLengthToReproduce + Random.Range(-1, 2);
+        if (offspring.tailLengthToReproduce < 2) offspring.tailLengthToReproduce = 2;
 
         return offspring;
     }
@@ -130,7 +118,7 @@ public class Snake : MonoBehaviour
     private float RandomMutation()
     {
         // Retorna uma pequena variação aleatória
-        return Random.Range(-0.1f, 0.1f);
+        return Random.Range(-1f, 1f);
     }
 
     void AddInitialTailSegments(int initialSize)
@@ -286,8 +274,7 @@ public class Snake : MonoBehaviour
         // else
         // {
         // Recalculate path to food if needed
-        Vector3 foodPosition = spawnFood.getFruta();
-        path = grid.GetPath(transform.position, foodPosition);
+        path = grid.GetPath(transform.position, closestFruta);
         FollowPath();
     }
     // }
@@ -296,7 +283,7 @@ public class Snake : MonoBehaviour
         // Convert Vector3 to Vector2 (ignoring Z-axis)
         Vector2 position2D = new Vector2(transform.position.x, transform.position.y);
         Vector2 playerPosition2D = new Vector2(player.position.x, player.position.y);
-        Vector2 foodPosition2D = new Vector2(spawnFood.getFruta().x, spawnFood.getFruta().y);
+        Vector2 foodPosition2D = new Vector2(closestFruta.x, closestFruta.y);
 
         // Calculate distances
         float distanceToPlayer = Vector2.Distance(position2D, playerPosition2D);
@@ -306,7 +293,7 @@ public class Snake : MonoBehaviour
         bool isPlayerInGrid = grid.IsInGrid(player.position);
 
         // Chase player if within grid bounds and closer than food
-        return isPlayerInGrid && distanceToPlayer < distanceToFood;
+        return isPlayerInGrid && distanceToPlayer - aggression < distanceToFood;
     }
 
     void MoveSnakeBodyOnGrid(Vector2 newPosition)
@@ -332,6 +319,7 @@ public class Snake : MonoBehaviour
     void Move()
     {
         adjustRotation();
+        this.closestFruta = spawnFood.getFruta(transform.position);
         // Decide whether to chase the player or go for the food
         if (ShouldChasePlayer())
         {
@@ -344,7 +332,7 @@ public class Snake : MonoBehaviour
         MoveSnakeBodyOnGrid(transform.position);
         grid.LogGrid();
 
-        if (tail.Count > this.tailLengthToReproduce) Reproduce();
+        if (tail.Count > this.tailLengthToReproduce && shouldReproduce) Reproduce();
 
     }
     void adjustRotation()
@@ -387,7 +375,7 @@ public class Snake : MonoBehaviour
             ate = true;
             // Remove the Food
             Destroy(coll.gameObject);
-            spawnFood.ate();
+            spawnFood.ate(coll.transform.position);
             // Reduce snake speed when eat
             // if (grid.SNAKE_SPEED < 0.3f) grid.SNAKE_SPEED += 0.05f;
             // Update the grid for the new tail segment

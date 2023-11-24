@@ -19,8 +19,8 @@ public class SpawnFood : MonoBehaviour
         this.grid = batata.grid;
         Spawn();
 
-        // Spawn food every 4 seconds, starting in 3
-        //InvokeRepeating("Spawn", 3, 4);
+        //Spawn food every 5 seconds, starting in 3
+        InvokeRepeating("Spawn", 3, 4);
     }
 
     // Spawn one piece of food
@@ -56,23 +56,40 @@ public class SpawnFood : MonoBehaviour
     }
 
 
-
-    public void ate()
+    private Vector3 FindClosestTargetPosition(Vector3 startPos, List<Vector3> targetPositions)
     {
-        if (foodPositions.Count > 0) foodPositions.RemoveAt(0);
+        Vector3 closestTarget = Vector3.positiveInfinity;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (Vector3 targetPos in targetPositions)
+        {
+            float currentDistance = Vector3.Distance(startPos, targetPos);
+            if (currentDistance < closestDistance)
+            {
+                closestDistance = currentDistance;
+                closestTarget = targetPos;
+            }
+        }
+
+        return closestTarget;
     }
-    public Vector3 getFruta()
+
+    public void ate(Vector3 pos)
+    {
+        foodPositions.Remove(pos);
+        // if (foodPositions.Count > 0) foodPositions.RemoveAt(0);
+    }
+    public Vector3 getFruta(Vector3 posWhoCalled)
     {
         // check if has food
         if (foodPositions.Count == 0)
         {
+
             Vector3 v3 = Spawn();
             // foodPositions.RemoveAt(0);
             return v3;
         }
-        Vector3 v = foodPositions[0];
-        // foodPositions.RemoveAt(0);
-        return v;
+        return FindClosestTargetPosition(posWhoCalled, foodPositions);
     }
 }
 
