@@ -13,7 +13,7 @@ public class Snake : MonoBehaviour
 
     public int startingSize = 1;
 
-public bool shouldReproduce = true;
+    public bool shouldReproduce = true;
 
     Vector2 dir = Vector2.right;
      private int arrowHitCount = 0;
@@ -291,6 +291,8 @@ public bool shouldReproduce = true;
 
         // Check if the player is within the grid bounds
         bool isPlayerInGrid = grid.IsInGrid(player.position);
+
+        Debug.Log(isPlayerInGrid + ", " + distanceToFood + ", " + distanceToPlayer + ", " + aggression + ", " + (isPlayerInGrid && distanceToPlayer - aggression < distanceToFood));
 
         // Chase player if within grid bounds and closer than food
         return isPlayerInGrid && distanceToPlayer - aggression < distanceToFood;
