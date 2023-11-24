@@ -23,6 +23,7 @@ public class Snake : MonoBehaviour
     bool ate = false;
 
     // Tail Prefab
+    public GameObject victoryMenu;
     public GameObject tailPrefab;
     public GameObject tailEndPrefab; // Assign this in the Inspector
     public GameObject gameOverMenu;
@@ -332,7 +333,7 @@ public class Snake : MonoBehaviour
             else {
              Destroy(tail[0].gameObject); // Destrói o GameObject da cauda
              Destroy(gameObject); // Destrói o GameObject da cobra
-             gameOverMenu.SetActive(true);
+             victoryMenu.SetActive(true);
             }
             }
         }
