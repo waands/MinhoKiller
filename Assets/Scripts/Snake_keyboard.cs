@@ -12,6 +12,10 @@ public class Snake : MonoBehaviour
      private int arrowHitCount = 0;
     private int hitsToShrink = 10; // Número de acertos necessários para encolher
 
+    //vidas
+    int vida = 3;
+    public Animator vidaAnimator;
+
     // Keep Track of Tail
     List<Transform> tail = new List<Transform>();
 
@@ -337,7 +341,14 @@ public class Snake : MonoBehaviour
             Debug.Log("Archer collided with snake");
             // Dá a tela de game over
             // Carrega a cena atual novamente para resetar o jogo
-            gameOverMenu.SetActive(true);
+            if (vida > 1) {
+                vida--;
+                vidaAnimator.SetInteger("vidas", vida);
+            }else {
+                vida--;
+                vidaAnimator.SetInteger("vidas", vida);
+                gameOverMenu.SetActive(true);
+            }
             // Bump the player
             Rigidbody2D playerRigidbody = coll.GetComponent<Rigidbody2D>();
             if (playerRigidbody != null)
